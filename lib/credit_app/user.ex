@@ -8,6 +8,7 @@ defmodule CreditApp.User do
     field :password, :string, virtual: true
     field :password_hash, :string
     field :phone, :string
+    has_one(:client, CreditApp.Client)
 
     timestamps()
   end
