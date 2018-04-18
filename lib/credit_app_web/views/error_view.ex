@@ -1,8 +1,16 @@
 defmodule CreditAppWeb.ErrorView do
   use CreditAppWeb, :view
 
-  def render("404.json", _assigns) do
-    %{errors: %{detail: "Page not found"}}
+  def render("400.json", %{changeset: changeset}) do
+    %{errors: Ecto.Changeset.traverse_errors(changeset, &translate_error/1)}
+  end
+
+  def render("422.json", %{changeset: changeset}) do
+    %{errors: Ecto.Changeset.traverse_errors(changeset, &translate_error/1)}
+  end
+
+  def render("404.json", assigns) do
+    %{errors: %{detail: assigns.message}}
   end
 
   def render("500.json", _assigns) do
