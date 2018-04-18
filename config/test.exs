@@ -13,7 +13,7 @@ config :logger, level: :warn
 config :credit_app, CreditApp.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
-  password: "postgres",
+  password: "123456",
   database: "credit_app_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
