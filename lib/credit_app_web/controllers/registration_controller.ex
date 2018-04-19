@@ -25,7 +25,14 @@ defmodule CreditAppWeb.RegistrationController do
       case {activation_code, user.enabled} do
         {"123456", false} ->
           user = enable_user(user)
+
+          conn = login(conn, user)
+          jwt = get_token(conn)
+          exp_token = get_expiration(conn)
+
           conn
+          |> put_resp_header("Authorization", "Bearer #{jwt}")
+          |> put_resp_header("x-expires", to_string(exp_token))
           |> put_status(:ok)
           |> render(CreditAppWeb.UserView, "show.json", user: user)
         _ ->
@@ -45,5 +52,20 @@ defmodule CreditAppWeb.RegistrationController do
     user = Ecto.Changeset.change(user, enabled: true)
     user = Repo.update!(user)
     user
+  end
+
+  defp login(conn, user) do
+    conn
+    |> CreditApp.Auth.Guardian.Plug.sign_in(user)
+  end
+
+  defp get_token(conn) do
+    Guardian.Plug.current_token(conn)
+  end
+
+  defp get_expiration(conn) do
+    exp = Guardian.Plug.current_claims(conn)
+    |> Map.get("exp")
+    exp
   end
 end
