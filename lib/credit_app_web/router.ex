@@ -7,5 +7,8 @@ defmodule CreditAppWeb.Router do
 
   scope "/api", CreditAppWeb do
     pipe_through :api
+
+    post("/signup", RegistrationController, :create)
+    post("/activateuser", RegistrationController, :activate_user)
   end
 end
