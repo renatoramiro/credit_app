@@ -11,6 +11,7 @@ defmodule CreditAppWeb.UserView do
 
   def render("activate_user.json", %{user: user}) do
     %{
+      id: user.id,
       phone: user.phone,
       activation_code: "123456"
     }
