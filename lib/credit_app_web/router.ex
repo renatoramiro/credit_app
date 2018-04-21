@@ -27,6 +27,6 @@ defmodule CreditAppWeb.Router do
   scope "/api", CreditAppWeb do
     pipe_through [:api, :api_auth, :set_token]
 
-    post("/createclient", ClientController, :create)
+    resources("/clients", ClientController, only: [:create, :update])
   end
 end
