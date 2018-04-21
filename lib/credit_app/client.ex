@@ -24,6 +24,15 @@ defmodule CreditApp.Client do
   end
 
   @doc false
+  def update_changeset(client, attrs) do
+    client
+    |> cast(attrs, [:name, :address])
+    |> validate_required([:name, :address])
+    |> unique_constraint(:account)
+    |> assoc_constraint(:user)
+  end
+
+  @doc false
   def creation_changeset(struct, attrs) do
     struct
     |> changeset(attrs)

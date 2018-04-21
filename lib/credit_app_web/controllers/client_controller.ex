@@ -17,4 +17,23 @@ defmodule CreditAppWeb.ClientController do
         |> render(CreditAppWeb.ErrorView, "400.json", changeset: changeset)
     end
   end
+
+  def update(conn, %{"id" => id, "client" => client_params}) do
+    with client = %Client{} <- Repo.get(Client, id) do
+      changeset = Client.update_changeset(client, client_params)
+      case Repo.update(changeset) do
+        {:ok, client} ->
+          render(conn, "show_full.json", client: Repo.preload(client, [:user]))
+        {:error, changeset} ->
+          conn
+          |> put_status(400)
+          |> render(CreditAppWeb.ErrorView, "400.json", changeset: changeset)
+      end
+    else
+      nil ->
+        conn
+        |> put_status(404)
+        |> render(CreditAppWeb.ErrorView, "404.json", message: "Client not found!")
+    end
+  end
 end
