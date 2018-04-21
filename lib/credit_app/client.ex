@@ -10,6 +10,8 @@ defmodule CreditApp.Client do
     field :credit, :decimal
     field :name, :string
     belongs_to(:user, CreditApp.User)
+    many_to_many :source, CreditApp.Transation, join_through: "transactions", join_keys: [source_id: :id, destiny_id: :id]
+    many_to_many :destiny, CreditApp.Transation, join_through: "transactions", join_keys: [destiny_id: :id, source_id: :id]
 
     timestamps()
   end
