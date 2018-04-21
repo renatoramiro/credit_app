@@ -21,6 +21,7 @@ defmodule CreditAppWeb.Router do
 
     post("/signup", RegistrationController, :create)
     post("/activateuser", RegistrationController, :activate_user)
+    post("/signin", SessionController, :create)
   end
 
   scope "/api", CreditAppWeb do
