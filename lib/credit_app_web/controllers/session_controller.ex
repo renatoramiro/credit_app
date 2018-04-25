@@ -26,7 +26,7 @@ defmodule CreditAppWeb.SessionController do
         |> render("login.json", user: Repo.preload(user, [:client]))
       {:error, reason, conn} ->
         conn
-        |> send_resp(reason, "{\"success\":false, \"message\": \"#{reason}\"}")
+        |> send_resp(reason, "{\"message\": \"User was not found with these credentials.\"}")
         |> halt()
     end
   end
