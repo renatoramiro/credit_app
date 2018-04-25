@@ -9,9 +9,13 @@ defmodule CreditApp.Client do
     field :agency, :string
     field :credit, :decimal
     field :name, :string
+
     belongs_to(:user, CreditApp.User)
-    many_to_many :source, CreditApp.Transation, join_through: "transactions", join_keys: [source_id: :id, destiny_id: :id]
-    many_to_many :destiny, CreditApp.Transation, join_through: "transactions", join_keys: [destiny_id: :id, source_id: :id]
+    many_to_many :transactions, CreditApp.Client, join_through: "transactions",
+      on_replace: :delete, join_keys: [client_id: :id, transaction_id: :id]
+      
+    many_to_many :reverse_transactions, CreditApp.Client, join_through: "transactions",
+      on_replace: :delete, join_keys: [transaction_id: :id, client_id: :id]
 
     timestamps()
   end
