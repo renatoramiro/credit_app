@@ -1,5 +1,4 @@
 defmodule CreditApp.Auth.Pipeline do
-  import Phoenix.Controller
   import Plug.Conn
 
   def init(opts), do: opts
@@ -11,7 +10,7 @@ defmodule CreditApp.Auth.Pipeline do
 
   defp refresh_token(conn) do
     jwt = Guardian.Plug.current_token(conn)
-    {:ok, old_token, {new_token, _new_claim}} = CreditApp.Auth.Guardian.refresh(jwt)
+    {:ok, _old_token, {new_token, _new_claim}} = CreditApp.Auth.Guardian.refresh(jwt)
     new_token
   end
 end
