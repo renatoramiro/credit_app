@@ -7,7 +7,7 @@ defmodule CreditApp.Client do
     field :account, :string
     field :address, :string
     field :agency, :string
-    field :credit, :decimal
+    field :credit, :float
     field :name, :string
 
     belongs_to(:user, CreditApp.User)

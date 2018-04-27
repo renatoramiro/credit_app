@@ -21,7 +21,7 @@ defmodule CreditApp.Auth.Guardian do
     # the resource id so here we'll rely on that to look it up.
     id = claims["sub"]
     resource = CreditApp.Repo.get!(CreditApp.User, id)
-    {:ok,  resource}
+    {:ok,  %{id: resource.id}}
   end
 
   def resource_from_claims(_claims) do

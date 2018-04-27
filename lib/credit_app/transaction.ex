@@ -4,7 +4,7 @@ defmodule CreditApp.Transaction do
 
 
   schema "transactions" do
-    field :value, :decimal
+    field :value, :float
 
     belongs_to(:client, CreditApp.Client)
     belongs_to(:transaction, CreditApp.Client)
@@ -17,8 +17,8 @@ defmodule CreditApp.Transaction do
     transaction
     |> cast(attrs, [:value, :client_id, :transaction_id])
     |> validate_required([:value, :client_id, :transaction_id])
-    |> validate_client_transaction_exists(:transaction_id)
-    |> validate_client_exists(:client_id)
+    |> validate_client_transaction_exists(:client_id)
+    |> validate_client_exists(:transaction_id)
   end
 
   @doc """
@@ -34,7 +34,7 @@ defmodule CreditApp.Transaction do
             []
           end
         nil ->
-          [{field, options[:message] || "Client not found!"}]
+          [{:transaction_id, options[:message] || "Client not found!"}]
       end
     end)
   end
@@ -48,7 +48,7 @@ defmodule CreditApp.Transaction do
         _client = %CreditApp.Client{} ->
           []
         nil ->
-          [{:transaction_id, options[:message] || "Client not found!"}]
+          [{:client_id, options[:message] || "Client not found!"}]
       end
     end)
   end
