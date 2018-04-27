@@ -1,9 +1,20 @@
 defmodule CreditAppWeb.TransactionController do
   use CreditAppWeb, :controller
-
-  alias CreditApp.{Repo, Transaction}
+  import Ecto.Query, only: [from: 2]
+  alias CreditApp.{Repo, Transaction, Client}
 
   plug :scrub_params, "transaction" when action in [:send_credit]
+
+  def index(conn, _params) do
+    resource = CreditApp.Auth.Guardian.Plug.current_resource(conn)
+    client = Repo.get_by!(Client, user_id: resource.id)
+    query = from t in Transaction,
+            where: t.client_id == ^client.id or t.transaction_id == ^client.id,
+            order_by: [desc: t.inserted_at], limit: 20,
+            select: t
+    transactions = Repo.all(query)
+    render(conn, "transactions.json", transactions: transactions, id: client.id)
+  end
 
   def send_credit(conn, %{"transaction" => transaction_params}) do
     changeset = Transaction.changeset(%Transaction{}, transaction_params)
