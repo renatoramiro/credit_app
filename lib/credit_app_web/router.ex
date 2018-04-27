@@ -29,6 +29,7 @@ defmodule CreditAppWeb.Router do
     pipe_through [:api, :api_auth, :set_token]
 
     resources("/clients", ClientController, only: [:create, :update])
+    get("/listcredits", TransactionController, :index)
     post("/sendcredit", TransactionController, :send_credit)
   end
 end
