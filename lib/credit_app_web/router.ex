@@ -10,6 +10,7 @@ defmodule CreditAppWeb.Router do
                              error_handler: CreditApp.Auth.ErrorHandler
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
+    plug Guardian.Plug.EnsureAuthenticated
   end
 
   pipeline :set_token do
@@ -28,5 +29,6 @@ defmodule CreditAppWeb.Router do
     pipe_through [:api, :api_auth, :set_token]
 
     resources("/clients", ClientController, only: [:create, :update])
+    post("/sendcredit", TransactionController, :send_credit)
   end
 end
