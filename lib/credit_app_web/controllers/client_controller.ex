@@ -36,4 +36,5 @@ defmodule CreditAppWeb.ClientController do
         |> render(CreditAppWeb.ErrorView, "404.json", message: "Client not found!")
     end
   end
+  
 end
