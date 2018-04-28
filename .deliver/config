@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+APP="credit_app"
+
+BUILD_HOST="45.62.255.106"
+BUILD_USER="bankuser"
+BUILD_AT="/home/bankuser/app_build"
+
+PRODUCTION_HOSTS="45.62.255.106" 
+PRODUCTION_USER="bankuser" 
+DELIVER_TO="/home/bankuser/app_release"
+
+pre_erlang_get_and_update_deps() {
+  local _prod_secret_path="/home/bankuser/app_config/prod.secret.exs"
+  if [ "$TARGET_MIX_ENV" = "prod" ]; then
+    __sync_remote "
+      ln -sfn '$_prod_secret_path' '$BUILD_AT/config/prod.secret.exs'
+    "
+  fi
+}
