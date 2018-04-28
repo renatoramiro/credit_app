@@ -15,8 +15,7 @@ use Mix.Config
 # which you typically run after static files are built.
 config :credit_app, CreditAppWeb.Endpoint,
   http: [port: 4000],
-  load_from_system_env: true,
-  url: [host: "gasfacil.tk", port: 80],
+  url: [host: "45.62.255.106", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json",
   server: true,
   code_reloader: false
