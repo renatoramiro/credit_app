@@ -9,6 +9,10 @@ defmodule CreditAppWeb.ClientView do
     %{data: render_one(client, CreditAppWeb.ClientView, "client_full.json")}
   end
 
+  def render("get_client.json", %{client: client}) do
+    %{data: render_one(client, CreditAppWeb.ClientView, "simple_client.json")}
+  end
+
   def render("client.json", %{client: client}) do
     %{
       id: client.id,
@@ -18,6 +22,15 @@ defmodule CreditAppWeb.ClientView do
       agency: client.agency,
       account: client.account,
       user_id: client.user_id
+    }
+  end
+
+  def render("simple_client.json", %{client: client}) do
+    %{
+      id: client.id,
+      name: client.name,
+      agency: client.agency,
+      account: client.account
     }
   end
 
