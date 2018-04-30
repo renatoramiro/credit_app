@@ -36,5 +36,16 @@ defmodule CreditAppWeb.ClientController do
         |> render(CreditAppWeb.ErrorView, "404.json", message: "Client not found!")
     end
   end
-  
+
+  def get_client(conn, %{"account" => account, "agency" => agency}) do
+    client = Repo.get_by(Client, %{agency: agency, account: account})
+    case client do
+      %Client{} ->
+        render(conn, "get_client.json", client: client)
+      nil ->
+        conn
+        |> put_status(404)
+        |> render(CreditAppWeb.ErrorView, "404.json", message: "Client not found!")
+    end
+  end
 end
