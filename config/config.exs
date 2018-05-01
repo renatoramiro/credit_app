@@ -26,6 +26,13 @@ config :credit_app, CreditApp.Auth.Guardian,
   issuer: "credit_app",
   secret_key: "QVJcxAQwT3QRxhuyd9UwOBjaABZS8pXIRxxXy8qIouN30cPeGUycGSg7jSGBX7QR"
 
+
+config :cors_plug,
+  origin: ["*"],
+  max_age: 86400,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  expose: ["authorization"]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

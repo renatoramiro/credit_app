@@ -43,7 +43,8 @@ defmodule CreditApp.Mixfile do
       {:bcrypt_elixir, "~> 1.0"},
       {:guardian, "~> 1.0"},
       {:edeliver, "~> 1.4.3"},
-      {:distillery, "~> 1.4"}
+      {:distillery, "~> 1.4"},
+      {:cors_plug, "~> 1.5"}
     ]
   end
 
