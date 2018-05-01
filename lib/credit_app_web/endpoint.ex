@@ -36,6 +36,8 @@ defmodule CreditAppWeb.Endpoint do
     key: "_credit_app_key",
     signing_salt: "AXdqn6bK"
 
+  plug CORSPlug
+
   plug CreditAppWeb.Router
 
   @doc """
