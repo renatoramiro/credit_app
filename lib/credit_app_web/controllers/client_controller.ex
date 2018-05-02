@@ -37,6 +37,19 @@ defmodule CreditAppWeb.ClientController do
     end
   end
 
+  def get_client_by_token(conn, _params) do
+    resource = CreditApp.Auth.Guardian.Plug.current_resource(conn)
+    client = Repo.get_by(Client, user_id: resource.id)
+    case client do
+      %Client{} ->
+        render(conn, "show.json", client: client)
+      _ ->
+        conn
+        |> put_status(404)
+        |> render(CreditAppWeb.ErrorView, "404.json", message: "Client not found!")
+    end
+  end
+
   def get_client(conn, %{"account" => account, "agency" => agency}) do
     client = Repo.get_by(Client, %{agency: agency, account: account})
     case client do

@@ -32,5 +32,6 @@ defmodule CreditAppWeb.Router do
     get("/listcredits", TransactionController, :index)
     post("/sendcredit", TransactionController, :send_credit)
     post("/getclient", ClientController, :get_client)
+    get("/getclientbytoken", ClientController, :get_client_by_token)
   end
 end
