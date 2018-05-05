@@ -4,7 +4,7 @@ defmodule CreditApp.Auth.Pipeline do
   def init(opts), do: opts
   def call(conn, _opts) do
     conn = conn
-    |> put_resp_header("Autorization", "Bearer #{refresh_token(conn)}")
+    |> put_resp_header("Authorization", "Bearer #{refresh_token(conn)}")
     conn
   end
 

@@ -3,7 +3,7 @@ defmodule CreditAppWeb.ClientController do
 
   alias CreditApp.{Client, Repo}
 
-  plug :scrub_params, "client" when action in [:create]
+  plug :scrub_params, "client" when action in [:create, :update]
 
   def create(conn, %{"client" => client_params}) do
     changeset = Client.creation_changeset(%Client{}, client_params)
