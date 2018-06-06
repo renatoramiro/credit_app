@@ -40,8 +40,10 @@ defmodule CreditAppWeb.ClientController do
   def get_client_by_token(conn, _params) do
     resource = CreditApp.Auth.Guardian.Plug.current_resource(conn)
     client = Repo.get_by(Client, user_id: resource.id)
+
     case client do
       %Client{} ->
+        CreditAppWeb.Endpoint.broadcast!("room:#{client.id}", "reload_client:msg", %{"reload_client" => true})
         render(conn, "show.json", client: client)
       _ ->
         conn
