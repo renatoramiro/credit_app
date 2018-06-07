@@ -2,7 +2,8 @@ defmodule CreditAppWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", CreditAppWeb.RoomChannel
+  channel "room:*", CreditAppWeb.RoomChannel
+  # channel "room:lobby", CreditAppWeb.RoomChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -19,13 +20,24 @@ defmodule CreditAppWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    {:ok, socket}
+  def connect(params, socket) do
+    case CreditApp.Auth.Guardian.decode_and_verify(String.replace(params["token"], "Bearer ", "")) do
+      {:ok, claims} ->
+        case CreditApp.Auth.Guardian.resource_from_claims(claims) do
+          {:ok, user} ->
+            {:ok, assign(socket, :current_user, user)}
+          {:error, _reason} ->
+            :error
+        end
+      {:error, _reason} ->
+        :error
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
-  #
-  #     def id(socket), do: "user_socket:#{socket.assigns.user_id}"
+  def id(socket) do
+    "users_socket:#{socket.assigns.current_user.id}"
+  end
   #
   # Would allow you to broadcast a "disconnect" event and terminate
   # all active sockets and channels for a given user:
@@ -33,5 +45,5 @@ defmodule CreditAppWeb.UserSocket do
   #     CreditAppWeb.Endpoint.broadcast("user_socket:#{user.id}", "disconnect", %{})
   #
   # Returning `nil` makes this socket anonymous.
-  def id(_socket), do: nil
+  # def id(socket), do: nil
 end
