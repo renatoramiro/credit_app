@@ -42,6 +42,10 @@
             <stringProp name="Header.name">Content-Type</stringProp>
             <stringProp name="Header.value">application/json</stringProp>
           </elementProp>
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Accept</stringProp>
+            <stringProp name="Header.value">application/vnd.credit-app.v1+json</stringProp>
+          </elementProp>
         </collectionProp>
       </HeaderManager>
       <hashTree/>
@@ -67,7 +71,7 @@
           <stringProp name="-1419699195">agency</stringProp>
         </collectionProp>
         <collectionProp name="UserParameters.thread_values">
-          <collectionProp name="-574039016">
+          <collectionProp name="165090362">
             <stringProp name="1449590337">111222</stringProp>
             <stringProp name="1450575459">123456</stringProp>
             <stringProp name="1420005889">000001</stringProp>
