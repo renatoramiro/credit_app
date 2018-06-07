@@ -6,7 +6,7 @@ defmodule CreditAppWeb.SessionController do
 
   alias CreditApp.{User, Repo}
 
-  def create(conn, %{"session" => %{"identity_document" => identity_document, "password" => password}}) do
+  def create(%{assigns: %{version: :v1}}=conn, %{"session" => %{"identity_document" => identity_document, "password" => password}}) do
     user = Repo.get_by(User, identity_document: identity_document) |> Repo.preload(:client)
     result = cond do
       user && checkpw(password, user.password_hash) && user.enabled == true && user.client != nil ->

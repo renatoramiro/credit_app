@@ -5,7 +5,7 @@ defmodule CreditAppWeb.RegistrationController do
 
   plug :scrub_params, "user" when action in [:create]
 
-  def create(conn, %{"user" => user_params}) do
+  def create(%{assigns: %{version: :v1}}=conn, %{"user" => user_params}) do
     changeset = %User{} |> User.registration_changeset(user_params)
 
     case Repo.insert(changeset) do
@@ -20,7 +20,7 @@ defmodule CreditAppWeb.RegistrationController do
     end
   end
 
-  def activate_user(conn, %{"id" => id, "activation_code" => activation_code}) do
+  def activate_user(%{assigns: %{version: :v1}}=conn, %{"id" => id, "activation_code" => activation_code}) do
     with user = %User{} <- Repo.get(User, id) do
       case {activation_code, user.enabled} do
         {"123456", false} ->

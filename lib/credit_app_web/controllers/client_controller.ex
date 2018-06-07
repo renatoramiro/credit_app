@@ -5,7 +5,7 @@ defmodule CreditAppWeb.ClientController do
 
   plug :scrub_params, "client" when action in [:create, :update]
 
-  def create(conn, %{"client" => client_params}) do
+  def create(%{assigns: %{version: :v1}}=conn, %{"client" => client_params}) do
     changeset = Client.creation_changeset(%Client{}, client_params)
 
     case Repo.insert(changeset) do
@@ -18,7 +18,7 @@ defmodule CreditAppWeb.ClientController do
     end
   end
 
-  def update(conn, %{"id" => id, "client" => client_params}) do
+  def update(%{assigns: %{version: :v1}}=conn, %{"id" => id, "client" => client_params}) do
     with client = %Client{} <- Repo.get(Client, id) do
       changeset = Client.update_changeset(client, client_params)
       case Repo.update(changeset) do
@@ -37,7 +37,7 @@ defmodule CreditAppWeb.ClientController do
     end
   end
 
-  def get_client_by_token(conn, _params) do
+  def get_client_by_token(%{assigns: %{version: :v1}}=conn, _params) do
     resource = CreditApp.Auth.Guardian.Plug.current_resource(conn)
     client = Repo.get_by(Client, user_id: resource.id)
 
@@ -52,7 +52,7 @@ defmodule CreditAppWeb.ClientController do
     end
   end
 
-  def get_client(conn, %{"account" => account, "agency" => agency}) do
+  def get_client(%{assigns: %{version: :v1}}=conn, %{"account" => account, "agency" => agency}) do
     client = Repo.get_by(Client, %{agency: agency, account: account})
     case client do
       %Client{} ->
@@ -64,7 +64,7 @@ defmodule CreditAppWeb.ClientController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(%{assigns: %{version: :v1}}=conn, %{"id" => id}) do
     client = Repo.get(Client, id)
     case client do
       %Client{} ->

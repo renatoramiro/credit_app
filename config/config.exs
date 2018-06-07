@@ -33,6 +33,10 @@ config :cors_plug,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   expose: ["authorization"]
 
+config :mime, :types, %{
+  "application/vnd.credit-app.v1+json" => [:v1]
+}
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

@@ -2,7 +2,8 @@ defmodule CreditAppWeb.Router do
   use CreditAppWeb, :router
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug :accepts, [:v1]
+    plug CreditAppWeb.Version
   end
 
   pipeline :api_auth do

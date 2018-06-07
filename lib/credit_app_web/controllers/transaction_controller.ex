@@ -5,7 +5,7 @@ defmodule CreditAppWeb.TransactionController do
 
   plug :scrub_params, "transaction" when action in [:send_credit]
 
-  def index(conn, _params) do
+  def index(%{assigns: %{version: :v1}}=conn, _params) do
     resource = CreditApp.Auth.Guardian.Plug.current_resource(conn)
     client = Repo.get_by!(Client, user_id: resource.id)
     query = from t in Transaction,
@@ -16,7 +16,7 @@ defmodule CreditAppWeb.TransactionController do
     render(conn, "transactions.json", transactions: transactions, id: client.id)
   end
 
-  def send_credit(conn, %{"transaction" => transaction_params}) do
+  def send_credit(%{assigns: %{version: :v1}}=conn, %{"transaction" => transaction_params}) do
     changeset = Transaction.changeset(%Transaction{}, transaction_params)
 
     case Repo.insert(changeset) do
