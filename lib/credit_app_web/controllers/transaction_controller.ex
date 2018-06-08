@@ -23,7 +23,6 @@ defmodule CreditAppWeb.TransactionController do
       {:ok, transaction} ->
         debit_credit(transaction.transaction_id, transaction.value)
         credit_value(transaction.client_id, transaction.value)
-        CreditAppWeb.Endpoint.broadcast!("room:#{transaction.client_id}", "transaction:msg", %{"new_transaction" => "transaction"})
         render(conn, "successful.json", transaction: transaction)
       {:error, changeset} ->
         conn

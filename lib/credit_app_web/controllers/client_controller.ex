@@ -43,7 +43,6 @@ defmodule CreditAppWeb.ClientController do
 
     case client do
       %Client{} ->
-        CreditAppWeb.Endpoint.broadcast!("room:#{client.id}", "reload_client:msg", %{"reload_client" => true})
         render(conn, "show.json", client: client)
       _ ->
         conn

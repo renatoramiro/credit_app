@@ -19,10 +19,15 @@ defmodule CreditAppWeb.RoomChannel do
   #   {:reply, {:ok, payload}, socket}
   # end
 
+  def handle_in("reload_client:msg", %{"body" => body}, socket) do
+    CreditAppWeb.Endpoint.broadcast!("room:#{body["id"]}", "reload_client:success:#{body["id"]}", %{"body" => body})
+    {:noreply, socket}
+  end
+
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (room:lobby).
-  def handle_in("new_transaction", %{"body" => body}, socket) do
-    broadcast! socket, "room:" <> body.id, %{"body" => body}
+  def handle_in("transaction:msg", %{"body" => body}, socket) do
+    CreditAppWeb.Endpoint.broadcast!("room:#{body["id"]}", "transaction:success:#{body["id"]}", %{"body" => body})
     {:noreply, socket}
   end
 
