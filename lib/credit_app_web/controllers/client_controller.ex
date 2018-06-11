@@ -1,6 +1,6 @@
 defmodule CreditAppWeb.ClientController do
   use CreditAppWeb, :controller
-
+  import Ecto.Query, only: [from: 2]
   alias CreditApp.{Client, Repo}
 
   plug :scrub_params, "client" when action in [:create, :update]
@@ -19,7 +19,11 @@ defmodule CreditAppWeb.ClientController do
   end
 
   def update(%{assigns: %{version: :v1}}=conn, %{"id" => id, "client" => client_params}) do
-    with client = %Client{} <- Repo.get(Client, id) do
+    resource = CreditApp.Auth.Guardian.Plug.current_resource(conn)
+    query = from client in Client,
+            where: client.user_id == ^resource.id and client.id == ^id,
+            select: client
+    with client = %Client{} <- Repo.one(query) do
       changeset = Client.update_changeset(client, client_params)
       case Repo.update(changeset) do
         {:ok, client} ->
