@@ -1,13 +1,20 @@
 defmodule CreditAppWeb.SessionController do
   use CreditAppWeb, :controller
 
+  import Ecto.Query, only: [from: 2]
   import Comeonin.Bcrypt, only: [checkpw: 2]
   plug :scrub_params, "session" when action in [:create]
 
   alias CreditApp.{User, Repo}
 
-  def create(%{assigns: %{version: :v1}}=conn, %{"session" => %{"identity_document" => identity_document, "password" => password}}) do
-    user = Repo.get_by(User, identity_document: identity_document) |> Repo.preload(:client)
+  def create(%{assigns: %{version: :v1}}=conn, %{"session" => %{"identity_document" => identity_document, "password" => password, "player_id" => player_id}}) do
+    query = from user in User,
+      left_join: client in assoc(user, :client),
+      preload: [client: client],
+      where: user.id == client.user_id and user.identity_document == ^identity_document
+
+    user = query_user(query, player_id)
+
     result = cond do
       user && checkpw(password, user.password_hash) && user.enabled == true && user.client != nil ->
         new_conn = login(conn, user)
@@ -45,6 +52,25 @@ defmodule CreditAppWeb.SessionController do
         conn
         |> send_resp(reason, "{\"message\": \"User was not found with these credentials.\"}")
         |> halt()
+    end
+  end
+
+  defp query_user(query, player_id) do
+    with user = %User{} <- Repo.one(query) do
+      if user.player_id != player_id do
+        changeset = Ecto.Changeset.change(user, player_id: player_id)
+        case Repo.update(changeset) do
+          {:ok, user} ->
+            user
+          {:error, _changeset} ->
+            nil
+        end
+      else
+        user
+      end
+    else
+      nil ->
+        nil
     end
   end
 

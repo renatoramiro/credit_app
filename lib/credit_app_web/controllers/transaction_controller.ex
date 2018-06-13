@@ -23,6 +23,7 @@ defmodule CreditAppWeb.TransactionController do
       {:ok, transaction} ->
         debit_credit(transaction.transaction_id, transaction.value)
         credit_value(transaction.client_id, transaction.value)
+        send_push_notification(transaction.client_id)
         render(conn, "successful.json", transaction: transaction)
       {:error, changeset} ->
         conn
@@ -41,5 +42,29 @@ defmodule CreditAppWeb.TransactionController do
     client = Repo.get!(CreditApp.Client, client_id)
     client = Ecto.Changeset.change(client, credit: client.credit + value)
     Repo.update!(client)
+  end
+
+  defp send_push_notification(client_id) do
+    query = from user in CreditApp.User,
+      left_join: client in assoc(user, :client),
+      preload: [client: client],
+      where: user.id == client.user_id and client.id == ^client_id
+
+    user = Repo.one(query)
+
+    headers = [
+      {"Content-Type", "application/json; charset=utf-8"},
+      {"Authorization", Application.get_env(:credit_app, :onesignal)[:authorization]}
+    ]
+
+    body = %{
+      "app_id" => Application.get_env(:credit_app, :onesignal)[:app_id],
+      "template_id"=> Application.get_env(:credit_app, :onesignal)[:template_id],
+      "include_player_ids"=>[user.player_id]
+    }
+
+    {:ok,body} = Poison.encode(body)
+
+    HTTPoison.post "https://onesignal.com/api/v1/notifications", body, headers
   end
 end

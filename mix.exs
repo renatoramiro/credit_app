@@ -44,7 +44,8 @@ defmodule CreditApp.Mixfile do
       {:guardian, "~> 1.0"},
       {:edeliver, "~> 1.4.3"},
       {:distillery, "~> 1.4"},
-      {:cors_plug, "~> 1.5"}
+      {:cors_plug, "~> 1.5"},
+      {:httpoison, "~> 1.0"}
     ]
   end
 
